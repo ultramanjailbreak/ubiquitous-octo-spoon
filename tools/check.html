@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RAW GAME 13.52 -- build checks</title>
+    <style>
+      body {
+        background: #0d0f12;
+        color: #d6dbe1;
+        font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 15px;
+        margin: 0 0 4px;
+        letter-spacing: 0.08em;
+      }
+      #summary {
+        font-size: 15px;
+        margin: 0 0 16px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        display: inline-block;
+      }
+      #summary.ok {
+        background: #10331c;
+        color: #6ee7a0;
+      }
+      #summary.bad {
+        background: #3a1414;
+        color: #ff8f8f;
+      }
+      .g {
+        margin: 18px 0 6px;
+        color: #6f7a86;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        border-bottom: 1px solid #22282f;
+        padding-bottom: 4px;
+      }
+      .r {
+        display: flex;
+        gap: 10px;
+        padding: 2px 0;
+      }
+      .r .s {
+        width: 40px;
+        flex: none;
+      }
+      .r.ok .s {
+        color: #6ee7a0;
+      }
+      .r.bad .s {
+        color: #ff8f8f;
+      }
+      .r .n {
+        flex: 1 1 45%;
+      }
+      .r .d {
+        flex: 1 1 55%;
+        color: #7b8794;
+        overflow-wrap: anywhere;
+      }
+      .r.bad .d {
+        color: #ffb0b0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>RAW GAME 13.52 &mdash; build checks</h1>
+    <p id="summary">running&hellip;</p>
+    <div id="out"></div>
+    <!-- Cache-busted from this page's own ?v=, so editing check.js and
+         reloading actually runs the NEW checks.
+         
+         This used to be a hardcoded src="./check.js?v=4". That only works if
+         someone remembers to bump the 4 by hand, and when they forget the page
+         cheerfully reports the previous run's verdict -- 49/49, green, against
+         code that no longer exists. A static src also cannot see the page's
+         query string, so &v=N on the page URL only ever busted the dynamic
+         import of ps4_offsets.js and left check.js itself stale. Hence the
+         dynamic import, which can read location.search. -->
+    <script type="module">
+      const v = new URLSearchParams(location.search).get("v") || "1";
+      await import("./check.js?v=" + encodeURIComponent(v));
+    </script>
+  </body>
+</html>

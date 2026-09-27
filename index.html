@@ -1,0 +1,65 @@
+<!doctype html>
+<!--
+  manifest: the offline cache for the whole run lives here. boot.js checks for
+  this attribute and never blocks on it -- if the manifest is missing or fails
+  to update, the run still proceeds online. It is a first-run speed thing, not
+  a gate.
+-->
+<html lang="en" manifest="cache.appcache">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RAW GAME 13.52</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body>
+    <div id="brand">
+      <img src="logo_raw.png" alt="" width="26" height="26" /><b>RAW GAME</b
+      ><span class="fw">13.52</span>
+    </div>
+
+    <div id="spin"></div>
+
+    <div id="wrap">
+      <h1 id="title">RAW GAME</h1>
+      <div id="subtitle">checking firmware</div>
+
+      <div id="stepNow">checking firmware</div>
+      <div id="stepNote"></div>
+
+      <div id="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="barFill"></div>
+      </div>
+
+      <div id="stats">
+        <span>step <b id="statStep">0/2</b></span>
+        <span>time <b id="statTime">00:00</b></span>
+        <span>pass <b id="statPass">0</b></span>
+        <span>fail <b id="statFail">0</b></span>
+      </div>
+
+      <ol id="stepList"></ol>
+
+      <div id="console">
+        <div id="logFilter">
+          <button id="btnAll" type="button" class="on">all</button>
+          <button id="btnSteps" type="button">steps</button>
+          <button id="btnProofs" type="button">proofs</button>
+          <button id="btnCopy" type="button">copy</button>
+          <button id="btnClear" type="button">clear</button>
+          <button id="btnFold" type="button">collapse</button>
+          <span id="logCount">0</span>
+        </div>
+        <div id="logBody"></div>
+      </div>
+
+      <div id="verdicts"></div>
+      <div id="final" class="final"></div>
+    </div>
+
+    <div id="state" style="display: none"></div>
+    <div id="out" style="display: none"></div>
+
+    <script type="module" src="./boot.js"></script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+CACHE MANIFEST
+# rev 20260927-single-fw-1352
+#
+# 13.52-only build. Deliberately absent versus the upstream manifest:
+#   payload2.bin      -- byte-identical duplicate of goldhen.bin (same sha256)
+#   patches/1302.bin  -- other firmware, no longer reachable
+#   patches/1350.bin  -- other firmware, no longer reachable
+#   core.js?v=10      -- jb.js and mem.js now both import plain "./core.js",
+#                        so the query-string copy was a second module instance
+#   jb.js?v=19        -- same, stale versioned alias
+#
+# Every entry carries a sha256. Appcache treats a changed hash as a new version
+# of that entry, which is what makes the offline cache update in place instead
+# of serving a stale loader. Re-hash with tools/hash.ps1 after any edit.
+
+index.html #f5069f964de7f8836a5c89ba74865b305cf248cbc1a44d897a94eae4f2273210
+boot.js #eb429f30458df933dc8f20a7482ca3a518f824dd768137a42d24cfc565741922
+jb.html #d3b48a31813deaa4b6e48f6afa111e17f4532b231a0c150285183064ac3d1466
+jb.js #5655f714b2522802505540db14fa4c2f4291c6f9d9bb3f530d76ad553ad566e3
+ui.js #c1898f913e16270f92b053de69dd0af5e74c475e56196d5cc710faedc99f3058
+ui.css #1fba92b98a34bca36d59b09eef31609383435b41913ce0d55c4431098f41f820
+mem.js #27d9d763a165a128746ea706770cd540cb53c11cafa9607cf3cb3977dadff99c
+core.js #a76c52afbc19b05d176be2059048a3c6a4fb61db084d56434cef2b17da00b2b3
+int64.js #611da6a52da5ecf970a3718ab2a4561d3992c655c55342d066d12a9a50554f34
+ps4_offsets.js #bb464f70d241f027eaa699dace44f0c4a3671f1f1db5dfc3984445ce55ecfe63
+rpc_worker.js #2d030c4cc92f46f96e1e4aea0463e1cde84e7f9a2ec17411473880a0c3f4e682
+logo_raw.png #23cdc5f24ffd3508d2ca7c71fcdae5bd7fbe2718dad9393964957a930f3f02a5
+goldhen.bin #df3f27c1b35bc7c40e3a08caab948930914dc7d0301a73b68945cf6ffe40ea12
+patches/1352.bin #adfb9771904f71cd1f5a82cbded8ac46c7ffeb3df974579535cf711904ac347e
+
+NETWORK:
+*
+
+FALLBACK:
+index.html index.html
+jb.html jb.html

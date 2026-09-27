@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RAW GAME 13.52</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body>
+    <div id="brand">
+      <img src="logo_raw.png" alt="" width="26" height="26" /><b>RAW GAME</b
+      ><span class="fw">13.52</span>
+    </div>
+
+    <div id="spin"></div>
+
+    <div id="wrap">
+      <h1 id="title">RAW GAME</h1>
+      <div id="subtitle">starting</div>
+
+      <div id="stepNow">starting</div>
+      <div id="stepNote"></div>
+
+      <div id="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="barFill"></div>
+      </div>
+
+      <div id="stats">
+        <span>step <b id="statStep">0/15</b></span>
+        <span>time <b id="statTime">00:00</b></span>
+        <span>pass <b id="statPass">0</b></span>
+        <span>fail <b id="statFail">0</b></span>
+      </div>
+
+      <ol id="stepList"></ol>
+
+      <div id="console">
+        <div id="logFilter">
+          <button id="btnAll" type="button" class="on">all</button>
+          <button id="btnSteps" type="button">steps</button>
+          <button id="btnProofs" type="button">proofs</button>
+          <button id="btnCopy" type="button">copy</button>
+          <button id="btnClear" type="button">clear</button>
+          <button id="btnFold" type="button">collapse</button>
+          <span id="logCount">0</span>
+        </div>
+        <div id="logBody"></div>
+      </div>
+
+      <div id="verdicts"></div>
+      <div id="final" class="final"></div>
+    </div>
+
+    <!-- Legacy sinks. jb.js still writes state text and keeps a line buffer
+         here; they are hidden because ui.js owns the visible output. -->
+    <div id="state" style="display: none"></div>
+    <div id="out" style="display: none"></div>
+
+    <script type="module" src="./jb.js"></script>
+  </body>
+</html>

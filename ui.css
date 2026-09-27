@@ -1,0 +1,391 @@
+/* ui.css -- RAW GAME 13.52 loader chrome.
+   One stylesheet, no build step, no web fonts (the console has no network and
+   the PS4's WebKit is old). Colours are literal, not custom properties, so the
+   sheet works on the oldest engine the exploit targets. */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #0b0d10;
+  color: #c8ced8;
+  font: 15px/1.45 "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  -webkit-text-size-adjust: 100%;
+}
+
+#brand {
+  text-align: center;
+  padding: 9px 10px 8px;
+  background: #0e1116;
+  border-bottom: 1px solid #1e2732;
+}
+#brand img {
+  width: 26px;
+  height: 26px;
+  margin-right: 8px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+#brand b {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #e6ebf2;
+  vertical-align: middle;
+}
+#brand .fw {
+  color: #6d7787;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  margin-left: 8px;
+}
+
+#wrap {
+  padding: 14px 16px 18px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ---- title + step ---- */
+#title {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+  color: #e6ebf2;
+}
+#subtitle {
+  font-size: 12px;
+  color: #8b95a3;
+  margin: 2px 0 10px;
+  min-height: 15px;
+}
+
+#stepNow {
+  font-size: 14px;
+  color: #c8ced8;
+  margin: 0 0 3px;
+}
+#stepNote {
+  font-size: 12px;
+  color: #6d7787;
+  margin: 0 0 8px;
+  min-height: 15px;
+  font-family: Consolas, monospace;
+  word-break: break-word;
+}
+
+/* ---- bar ---- */
+#bar {
+  height: 10px;
+  background: #141a21;
+  border: 1px solid #1e2732;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+#barFill {
+  height: 100%;
+  width: 0;
+  background: #4a9d78;
+  /* No CSS transition: it would lag the real progress and cost frames on a
+     slow engine while 137 MB is pinned. */
+  border-right: 1px solid #6ec79c;
+}
+body.done #barFill {
+  background: #7fd0a0;
+}
+body.fail #barFill {
+  background: #d08a7f;
+}
+
+#stats {
+  display: flex;
+  gap: 14px;
+  font-size: 11px;
+  color: #6d7787;
+  margin: 6px 0 12px;
+  font-family: Consolas, monospace;
+  flex-wrap: wrap;
+}
+#stats b {
+  color: #aab4c2;
+  font-weight: 600;
+}
+#statPass {
+  color: #7fd0a0;
+}
+#statFail {
+  color: #d08a7f;
+}
+
+/* ---- step list ---- */
+#stepList {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  font-size: 11px;
+}
+#stepList li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 7px;
+  border: 1px solid #1a222c;
+  border-radius: 10px;
+  color: #566070;
+  background: #0e1218;
+}
+#stepList li i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2a3441;
+  display: inline-block;
+}
+#stepList li.done {
+  color: #7b8797;
+}
+#stepList li.done i {
+  background: #4a9d78;
+}
+#stepList li.on {
+  color: #e6ebf2;
+  border-color: #34506a;
+  background: #131b24;
+}
+#stepList li.on i {
+  background: #7fd0a0;
+}
+/* Per-phase wall clock. Dimmed until measured (no element at all until the
+   phase closes), so an unmeasured row never reads as "0ms = instant". */
+#stepList li b.ms {
+  font-weight: 500;
+  color: #3f4a58;
+  font-variant-numeric: tabular-nums;
+}
+#stepList li.done b.ms {
+  color: #6b7a8c;
+}
+#stepList li.on b.ms {
+  color: #9fb4c8;
+}
+
+/* ---- console ---- */
+#console {
+  border: 1px solid #1e2732;
+  border-radius: 6px;
+  background: #11151b;
+  overflow: hidden;
+}
+#logFilter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid #1a222c;
+  background: #0e1218;
+  flex-wrap: wrap;
+}
+#logFilter button {
+  font: inherit;
+  font-size: 11px;
+  padding: 3px 8px;
+  color: #8b95a3;
+  background: #141a21;
+  border: 1px solid #232d3a;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#logFilter button.on {
+  color: #0b0d10;
+  background: #7fd0a0;
+  border-color: #7fd0a0;
+  font-weight: 600;
+}
+#logCount {
+  margin-left: auto;
+  font-size: 11px;
+  color: #566070;
+  font-family: Consolas, monospace;
+}
+
+#logBody {
+  height: 46vh;
+  min-height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 6px 2px 6px 0;
+  font: 11.5px/1.5 Consolas, "Courier New", monospace;
+  -webkit-overflow-scrolling: touch;
+}
+#logBody .l {
+  display: flex;
+  gap: 7px;
+  padding: 1px 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-left: 2px solid transparent;
+}
+#logBody .l .c {
+  color: #3f4a58;
+  flex: 0 0 auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#logBody .l .m {
+  color: #7b8797;
+  flex: 0 0 auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#logBody .l .x {
+  color: #8b95a3;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+#logBody .l.head {
+  border-left-color: #34506a;
+  background: #121820;
+}
+#logBody .l.head .m {
+  color: #9fb3d0;
+  font-weight: 600;
+}
+#logBody .l.ok {
+  border-left-color: #3f7d5f;
+}
+#logBody .l.ok .m,
+#logBody .l.ok .x {
+  color: #7fd0a0;
+}
+#logBody .l.bad {
+  border-left-color: #7d3f3f;
+  background: #1a1113;
+}
+#logBody .l.bad .m,
+#logBody .l.bad .x {
+  color: #e08a7f;
+}
+#logBody .l.warn .m,
+#logBody .l.warn .x {
+  color: #d8c07f;
+}
+#logBody .l.dim .m,
+#logBody .l.dim .x {
+  color: #4a5563;
+}
+
+body.folded #logBody {
+  display: none;
+}
+
+/* ---- verdicts ---- */
+#verdicts {
+  margin: 12px 0 0;
+}
+#verdicts .v {
+  font: 11.5px/1.5 Consolas, monospace;
+  padding: 2px 8px;
+  border-left: 2px solid transparent;
+}
+#verdicts .v.ok {
+  color: #7fd0a0;
+  border-left-color: #3f7d5f;
+}
+#verdicts .v.bad {
+  color: #e08a7f;
+  border-left-color: #7d3f3f;
+}
+#verdicts .v span {
+  display: inline-block;
+  width: 40px;
+  font-weight: 700;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ---- final banner ---- */
+.final {
+  display: none;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid #1e2732;
+  background: #0e1218;
+}
+.final.ok {
+  border-color: #2f5a45;
+  background: #0d1512;
+}
+.final.bad {
+  border-color: #5a2f2f;
+  background: #150d0e;
+}
+.final b {
+  font-size: 17px;
+  letter-spacing: 0.14em;
+}
+.final.ok b {
+  color: #7fd0a0;
+}
+.final.bad b {
+  color: #e08a7f;
+}
+.final .fs {
+  font-size: 12px;
+  color: #8b95a3;
+  margin-top: 4px;
+  font-family: Consolas, monospace;
+}
+.final .fn {
+  font-size: 12px;
+  color: #d8c07f;
+  margin-top: 6px;
+  font-family: Consolas, monospace;
+  word-break: break-word;
+}
+.final .fw {
+  font-size: 12px;
+  color: #7b8797;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #1e2732;
+}
+.final code {
+  color: #9fb3d0;
+  font-family: Consolas, monospace;
+}
+
+#spin {
+  position: fixed;
+  top: calc(50% + 20px);
+  left: 50%;
+  width: 42px;
+  height: 42px;
+  margin: -21px 0 0 -21px;
+  border: 4px solid #1e2732;
+  border-top-color: #7fd0a0;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  pointer-events: none;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+body.done #spin,
+body.fail #spin {
+  display: none;
+}
+
+/* On the run page the console is the main event, so give it more room. */
+body.has-ui #logBody {
+  height: 48vh;
+}

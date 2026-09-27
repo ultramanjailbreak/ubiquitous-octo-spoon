@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- boot.js's warm list and its imports are relative to the site ROOT
+         (index.html), not to this page in tools/. Without this base every warm
+         fetch resolves to tools/jb.js and 404s, which looks exactly like a
+         broken warm list. -->
+    <base href="/" />
+    <link rel="stylesheet" href="/ui.css" />
+    <title>boot.js warm harness</title>
+  </head>
+  <body>
+    <div id="brand"><b>RAW GAME</b><span class="fw">13.52</span></div>
+    <div id="spin"></div>
+    <div id="wrap">
+      <h1 id="title"></h1>
+      <div id="subtitle"></div>
+      <div id="stepNow"></div>
+      <div id="stepNote"></div>
+      <div id="bar"><div id="barFill"></div></div>
+      <div id="stats">
+        <span>step <b id="statStep"></b></span>
+        <span>time <b id="statTime"></b></span>
+        <span>pass <b id="statPass"></b></span>
+        <span>fail <b id="statFail"></b></span>
+      </div>
+      <ol id="stepList"></ol>
+      <div id="console">
+        <div id="logFilter">
+          <button id="btnAll"></button><button id="btnSteps"></button>
+          <button id="btnProofs"></button><button id="btnCopy"></button>
+          <button id="btnClear"></button><button id="btnFold"></button>
+          <span id="logCount"></span>
+        </div>
+        <div id="logBody"></div>
+      </div>
+      <div id="verdicts"></div>
+      <div id="final" class="final"></div>
+    </div>
+    <div id="state" style="display: none"></div>
+    <div id="out" style="display: none"></div>
+
+    <!-- Dev harness, not shipped. boot.js gates on navigator.userAgent, so the
+         warm path is unreachable from a desktop browser -- it rejects at the
+         firmware check and start() never runs. This spoofs a 13.52 UA and
+         records every URL boot.js asks for, so the warm list can be verified
+         against what the module graph actually needs.
+
+         location.replace is NOT stubbed: on a Location object it is
+         unforgeable, so a stub silently fails to install and the hand-off
+         navigates for real. Instead the results are stashed in sessionStorage
+         on the way out and read back from jb.html. Letting the hand-off happen
+         is the point -- it proves the warm really does feed a jb.html that
+         loads. -->
+    <script>
+      Object.defineProperty(navigator, "userAgent", {
+        value: "Mozilla/5.0 (PlayStation 4/13.52) AppleWebKit/537.73 (KHTML, like Gecko)",
+      });
+      window.__req = [];
+      const realFetch = window.fetch;
+      window.fetch = function (u, o) {
+        // Record the resolved URL AND the outcome. boot.js swallows a failed
+        // warm in .catch(function(){}), so a 404 here is completely invisible
+        // in its own log -- which is the whole reason the warm list is checked
+        // statically in tools/check.js. Recording it here proves the eight
+        // parallel fetches actually returned content.
+        const rec = { url: String(u) };
+        window.__req.push(rec);
+        return realFetch.call(window, u, o).then(function (r) {
+          rec.status = r.status;
+          return r.arrayBuffer().then(function (b) {
+            rec.bytes = b.byteLength;
+            return new Response(b, {
+              status: r.status,
+              statusText: r.statusText,
+              headers: r.headers,
+            });
+          });
+        });
+      };
+      const stash = function () {
+        try {
+          sessionStorage.setItem(
+            "warmtest",
+            JSON.stringify({
+              req: window.__req,
+              t: Math.round(performance.now() - window.__t0),
+              log: Array.prototype.map.call(
+                document.querySelectorAll("#logBody .l"),
+                function (e) {
+                  return e.textContent.replace(/\s+/g, " ").slice(0, 90);
+                },
+              ),
+            }),
+          );
+        } catch (e) {}
+      };
+      window.addEventListener("pagehide", stash);
+      setInterval(stash, 50);
+    </script>
+    <script type="module">
+      window.__t0 = performance.now();
+      const v = new URLSearchParams(location.search).get("v") || "1";
+      await import("/boot.js?v=" + encodeURIComponent(v));
+      window.__done = true;
+    </script>
+  </body>
+</html>
